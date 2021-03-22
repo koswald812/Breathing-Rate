@@ -103,20 +103,18 @@
 
         var zeroTime = 0;
 
-        var allTimes;
-
-        var diff;
+        var allTimes = [];
 
         for (var i = 0; i < acc.length; i++) {
           norm[i] = acc[i] - mean;
           if (i > 0 && norm[i] < 0 && norm[i - 1] > 0) {
-            diff = time.get(i) - zeroTime;
-            allTimes = nj.Array([allTimes,diff]);
+            var diff = time.get(i) - zeroTime;
+            allTimes.push(diff);
             zeroTime = time.get(i);
           }
         }
 
-        var rate = 1 / allTimes.mean();
+        var rate = 1 / nj.array(allTimes).mean();
 
         console.log(rate)
 
