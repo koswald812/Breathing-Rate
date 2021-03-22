@@ -95,7 +95,7 @@
         // for numjs functions: use nj.array();
         var acc = nj.array(data).slice([null, 1]);
 
-        var mean = math.mean(acc);
+        var mean = acc.mean();
 
         var norm = Array(acc.length);
 
@@ -116,7 +116,7 @@
           }
         }
 
-        var rate = 1 / math.mean(allTimes);
+        var rate = 1 / allTimes.mean();
 
         console.log(rate)
 
