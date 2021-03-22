@@ -1,0 +1,18 @@
+// when button is pressed
+setWatch(function() {
+    // set the accel updater
+    Puck.on('accel', function(d) {
+      console.log(d);
+    });
+  
+    // turn on the accelerometer and LED
+    Puck.accelOn(12.5);
+    LED1.write(true);
+   
+    // in 10 seconds, stop reading data, turn off the LED.
+    setTimeout(function() {
+      Puck.accelOff();
+      LED1.write(false);
+    }, 10000);
+   
+  }, BTN, {edge: "rising", debounce:50, repeat:true});
