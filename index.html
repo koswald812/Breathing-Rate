@@ -114,9 +114,11 @@
           }
         }
 
-        var rate = 1 / nj.array(allTimes).mean();
+        var numbreaths = nj.array(allTimes).mean();
+        var rate = 1 / numbreaths;
 
-        console.log(rate)
+        console.log(numbreaths);
+        console.log(rate);
 
       }
 
