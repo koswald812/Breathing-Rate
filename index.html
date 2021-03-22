@@ -101,6 +101,9 @@
 
         var time = nj.array(data).slice([null,0]);
 
+        console.log(acc);
+        console.log(time);
+
         var zeroTime = 0;
 
         var allTimes = [];
@@ -117,6 +120,7 @@
         var numbreaths = nj.array(allTimes).mean();
         var rate = 1 / numbreaths;
 
+        console.log(allTimes);
         console.log(numbreaths);
         console.log(rate);
 
