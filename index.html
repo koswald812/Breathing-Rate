@@ -114,9 +114,9 @@
         for (var i = 0; i < acc.length; i++) {
           norm[i] = acc[i] - mean;
           if (i > 0 && norm[i] < 0 && norm[i - 1] > 0) {
-            var diff = time.get(i) - zeroTime;
+            var diff = time.get(i).getTime() - zeroTime;
             allTimes.push(diff);
-            zeroTime = time.get(i);
+            zeroTime = time.get(i).getTime();
           }
         }
 
