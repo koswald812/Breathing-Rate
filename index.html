@@ -74,6 +74,10 @@
 
       function onLine(v) {
 
+        console.log("in onLine: ");
+        console.log(v);
+        return;
+
         if (rec_flag) {
 
           var x = new Date(); // current time
@@ -160,7 +164,6 @@
           connection.on("data", function (d) {
 
             console.log("hello!");
-            console.log(d);
 
             buf += d;
 
