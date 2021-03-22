@@ -93,13 +93,12 @@
         // data is a list with [x,y] sub-lists (x is time, y is z-acc value)
         // to print something for debuggging: use console.log()
         // for numjs functions: use nj.array();
-        var acc = nj.array(data).slice([null, 1]);
+        var time = nj.array(data).slice([null],[0]);
+        var acc = nj.array(data).slice([null], [1]);
 
         var mean = acc.mean();
 
         var norm = Array(acc.length);
-
-        var time = nj.array(data).slice([null,0]);
 
         console.log(data);
         console.log(data.shape);
