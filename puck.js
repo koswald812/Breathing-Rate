@@ -6,7 +6,7 @@ setWatch(function() {
     });
   
     // turn on the accelerometer and LED
-    Puck.accelOn(12.5);
+    Puck.accelOn(104);
     LED1.write(true);
    
     // in 10 seconds, stop reading data, turn off the LED.

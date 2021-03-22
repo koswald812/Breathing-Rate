@@ -7,7 +7,6 @@
     </button>
 
     <button type="button" id="myrecord_start"> Start New Recording </button>
-    <button type="button" id="my_Savedata"> Save Date as CSV - File </button>
     <script src="https://www.puck-js.com/puck.js"></script>
 
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -28,17 +27,11 @@
 
       var data = [];
 
-      var rec_flag = false;
-
       var start_time;
 
       var connection;
 
-      var xconnect = document.getElementById("myPuck_connect");
-
-      var savemy_CSV = document.getElementById("my_Savedata");
-
-      var rec_startstop = document.getElementById("myrecord_start");
+      var xconnect = document.getElementById("myPuck_connect")
 
       var taxis_increment = 10 * 1000; /// axis increment in milliseconds
 
@@ -65,7 +58,7 @@
 
           // valueRange: [980, 1020],
 
-          labels: ['Time', 'Pressure'],
+          labels: ['Time', 'z-acceleration'],
 
           showRangeSelector: true
 
@@ -77,66 +70,25 @@
         console.log("in onLine: ");
         v = JSON.parse(v);
         console.log(v['acc']['z']);
-        
 
 
-        if (rec_flag) {
+        var x = new Date(); // current time
 
-          var x = new Date(); // current time
+        var y = parseFloat(v['acc']['z']);
 
-          var y = parseFloat(v['acc']['z']);
+        if (x.getTime() >= date_win_max) {
 
-          if (x.getTime() >= date_win_max) {
+          date_win_min += taxis_increment;
 
-            date_win_min += taxis_increment;
-
-            date_win_max += taxis_increment;
-
-            g.updateOptions({ dateWindow: [date_win_min, date_win_max] });
-
-          };
-
-          data.push([x, y]);
-
-          g.updateOptions({ 'file': data });
-
-        };
-
-      }
-
-
-      function startstop_record() {
-
-        if (rec_flag) {
-
-          rec_startstop.textContent = "Start New Recording";
-
-          rec_flag = false;
-
-          connection.write("clearInterval(1)\n", function () { });
-
-        } else {
-
-          data.splice(0, data.length);
-
-          // connection.write("Bluetooth.println(ecg().toFixed(3));} ,20); \n", function () { });
-          // connection.write(" \n", function () { });
-
-          t = new Date();
-
-          start_time = t;
-
-          var date_win_min = t.getTime();
-
-          var date_win_max = date_win_min + 2 * taxis_increment;
+          date_win_max += taxis_increment;
 
           g.updateOptions({ dateWindow: [date_win_min, date_win_max] });
 
-          rec_flag = true;
-
-          rec_startstop.textContent = "Stop Recording";
-
         };
+
+        data.push([x, y]);
+
+        g.updateOptions({ 'file': data });
 
       }
 
@@ -185,72 +137,30 @@
 
           xconnect.textContent = "Disconnect Puck via Bluetooth";
 
+          // Setup data collection and graphing
+
+          data.splice(0, data.length);
+
+          // connection.write("Bluetooth.println(ecg().toFixed(3));} ,20); \n", function () { });
+          // connection.write(" \n", function () { });
+
+          t = new Date();
+
+          start_time = t;
+
+          var date_win_min = t.getTime();
+
+          var date_win_max = date_win_min + 2 * taxis_increment;
+
+          g.updateOptions({ dateWindow: [date_win_min, date_win_max] });
+
         }); // End Puck.connect ()
 
       }
 
 
-      function savemyCSV() {
-
-        var csvContent = '';
-
-        data.forEach(function (dataArray, index) {
-
-          var diff_time = dataArray[0].getTime() - start_time;
-
-          dataString = diff_time.toFixed(0) + ',' + dataArray[1].toFixed(3);
-
-          csvContent += index < data.length ? dataString + '\n' : dataString;
-
-        });
-
-
-        // The download function takes a CSV string, the filename and mimeType as parameters
-
-        // Scroll/look down at the bottom of this snippet to see how download is called
-
-        var download = function (content, fileName, mimeType) {
-
-          var a = document.createElement('a');
-
-          mimeType = mimeType || 'application/octet-stream';
-
-          if (navigator.msSaveBlob) { // IE10
-
-            navigator.msSaveBlob(new Blob([content], { type: mimeType }), fileName);
-
-          } else if (URL && 'download' in a) { //html5 A[download]
-
-            a.href = URL.createObjectURL(new Blob([content], { type: mimeType }));
-
-
-            a.setAttribute('download', fileName);
-
-            document.body.appendChild(a);
-
-            a.click();
-
-            document.body.removeChild(a);
-
-          } else {
-
-            location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
-
-          }
-
-        }
-
-        download(csvContent, 'Puck.csv', 'text/csv;encoding:utf-8');
-
-      } // end savemyCSV();
-
-
 
       xconnect.addEventListener("click", function () { bluetooth_connect() });
-
-      savemy_CSV.addEventListener("click", function () { savemyCSV() });
-
-      rec_startstop.addEventListener("click", function () { startstop_record() });
 
     });
 
