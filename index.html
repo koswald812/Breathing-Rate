@@ -156,7 +156,14 @@
 
           var buf = "";
 
+          connection.on("accel", function (d) {
+            console.log("in accel");
+            console.log(d);
+          });
+
           connection.on("data", function (d) {
+
+            console.log("hello!");
 
             buf += d;
 
