@@ -76,13 +76,14 @@
 
         console.log("in onLine: ");
         console.log(v);
-        return;
+        
+
 
         if (rec_flag) {
 
           var x = new Date(); // current time
 
-          var y = parseFloat(v);
+          var y = parseFloat(v['acc']['z']);
 
           if (x.getTime() >= date_win_max) {
 
