@@ -5,7 +5,7 @@
 
     <button type="button" id="myPuck_connect"> Connect Puck via Bluetooth
     </button>
-    
+
     <script src="https://www.puck-js.com/puck.js"></script>
 
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -23,6 +23,8 @@
     <script type="text/javascript">
 
     $(document).ready(function () {
+
+      var nj = require('numjs');
 
       var data = [];
 
@@ -66,9 +68,7 @@
 
       function onLine(v) {
 
-        console.log("in onLine: ");
         v = JSON.parse(v);
-        console.log(v['acc']['z']);
 
 
         var x = new Date(); // current time
@@ -88,6 +88,35 @@
         data.push([x, y]);
 
         g.updateOptions({ 'file': data });
+
+        // code to calculate rate. 
+        // data is a list with [x,y] sub-lists (x is time, y is z-acc value)
+        // to print something for debuggging: use console.log()
+        // for numjs functions: use nj.array();
+        var acc = nj.array(data).slice([null, 1]);
+
+        var mean = math.mean(acc);
+
+        var norm = Array(acc.length);
+
+        var time = nj.array(data).slice([null,0]);
+
+        var zeroTime = 0;
+
+        var allTimes;
+
+        var diff;
+
+        for (var i = 0; i < acc.length; i++) {
+          norm[i] = acc[i] - mean;
+          if (i > 0 && norm[i] < 0 && norm[i - 1] > 0) {
+            diff = time.get(i) - zeroTime;
+            allTimes = nj.Array([allTimes,diff]);
+            zeroTime = time.get(i);
+          }
+        }
+
+        var rate = 1 / math.mean(allTimes);
 
       }
 
@@ -115,8 +144,6 @@
           var buf = "";
 
           connection.on("data", function (d) {
-
-            console.log("hello!");
 
             buf += d;
 
@@ -156,8 +183,6 @@
         }); // End Puck.connect ()
 
       }
-
-
 
       xconnect.addEventListener("click", function () { bluetooth_connect() });
 
