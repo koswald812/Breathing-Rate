@@ -113,7 +113,8 @@
 
           data.splice(0, data.length);
 
-          connection.write("setInterval(function(){Bluetooth.println(ecg().toFixed(3));} ,20); \n", function () { });
+          // connection.write("Bluetooth.println(ecg().toFixed(3));} ,20); \n", function () { });
+          // connection.write(" \n", function () { });
 
           t = new Date();
 

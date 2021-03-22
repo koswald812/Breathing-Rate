@@ -2,7 +2,7 @@
 setWatch(function() {
     // set the accel updater
     Puck.on('accel', function(d) {
-      console.log(d);
+      Bluetooth.println(`${d}\n`);
     });
   
     // turn on the accelerometer and LED
