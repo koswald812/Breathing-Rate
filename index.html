@@ -75,7 +75,8 @@
       function onLine(v) {
 
         console.log("in onLine: ");
-        console.log(v['acc']['v']);
+        v = JSON.parse(v);
+        console.log(v['acc']['z']);
         
 
 
