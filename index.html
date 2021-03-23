@@ -93,19 +93,15 @@
         // data is a list with [x,y] sub-lists (x is time, y is z-acc value)
         // to print something for debuggging: use console.log()
         // for numjs functions: use nj.array();
-        var time = nj.array(data).slice(null, 0);
+        var time = Array(data.length);
+
+        var t = 0;
+
         var acc = nj.array(data).slice(null, 1);
 
         var mean = acc.mean();
 
         var norm = Array(data.length);
-
-        console.log(data.shape);
-        
-        console.log(acc.shape);
-        console.log(acc);
-        console.log(time.shape);
-        console.log(time);
 
         var zeroTime = 0;
 
@@ -113,18 +109,18 @@
 
         for (var i = 0; i < acc.length; i++) {
           norm[i] = acc[i] - mean;
+          time[i] = t
+          t = t + (1 / 104);
           if (i > 0 && norm[i] < 0 && norm[i - 1] > 0) {
-            var diff = time.get(i).getTime() - zeroTime;
+            var diff = time.get(i) - zeroTime;
             allTimes.push(diff);
-            zeroTime = time.get(i).getTime();
+            zeroTime = time.get(i);
           }
         }
 
         var numbreaths = nj.array(allTimes).mean();
         var rate = 1 / numbreaths;
 
-        console.log(allTimes);
-        console.log(numbreaths);
         console.log(rate);
 
       }
