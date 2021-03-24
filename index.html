@@ -109,10 +109,10 @@
 
         var yfilter = [];
 
-        for (var i = 11; i < yvalues.length - 11; i++) {
+        for (var i = 401; i < yvalues.length - 50; i++) {
           sum = sum + yvalues[i];
           if (i > 0 && i%10 === 0) {
-            yfilter.push(sum / 5);
+            yfilter.push(sum / 10);
             sum = 0;
           }
         }
