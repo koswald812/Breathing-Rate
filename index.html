@@ -116,9 +116,9 @@
           time[i] = t0
           t0 = t0 + (1 / 104);
           if (i > 0 && norm[i] < 0 && norm[i - 1] > 0) {
-            var diff = time.get(i) - zeroTime;
+            var diff = time[i] - zeroTime;
             allTimes.push(diff);
-            zeroTime = time.get(i);
+            zeroTime = time[i];
           }
         }
 
