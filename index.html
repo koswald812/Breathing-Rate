@@ -28,6 +28,8 @@
 
       var data = [];
 
+      var kevinData = [];
+
       var tvalues = [];
 
       var yvalues = [];
@@ -44,11 +46,13 @@
 
       data.push([t, 1000.000]);
 
+      kevinData.push([0, 1000.000]);
+
       var date_win_min = t.getTime();
 
       var date_win_max = date_win_min + 2 * taxis_increment;
 
-      var g = new Dygraph(document.getElementById("div_g"), data,
+      var g = new Dygraph(document.getElementById("div_g"), kevinData, 
 
         {
 
@@ -87,18 +91,14 @@
 
         };
 
-        data.push([x, y]);
-        tvalues.push(t.getTime());
-        yvalues.push(y);
-
-        if ((data.length&15)==15) {
-          g.updateOptions( { 'file': data } );
-        }
+        
 
         // code to calculate rate. 
         // data is a list with [x,y] sub-lists (x is time, y is z-acc value)
         // to print something for debuggging: use console.log()
         // for numjs functions: use nj.array();
+
+        yvalues.push(y);
 
         var yfilter = [];
 
@@ -160,6 +160,17 @@
         var rate = 1 / avgPeriod;
 
         console.log("rate" + rate);
+
+        // PLOT POINTS ----
+        data.push([x, y]);
+        // push all data to the kevinData array.
+        for (var i = 0; i < time.length; i++) {
+          kevinData.push([time[i], norm[i]]);
+        }
+        if ((kevinData.length&15)==15) {
+          g.updateOptions( { 'file': kevinData } );
+        }
+        // ------------------
           
       }
 
