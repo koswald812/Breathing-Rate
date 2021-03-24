@@ -28,6 +28,10 @@
 
       var data = [];
 
+      var tvalues = [];
+
+      var yvalues = [];
+
       var start_time;
 
       var connection;
@@ -86,6 +90,8 @@
         };
 
         data.push([x, y]);
+        tvalues.push(t.getTime());
+        yvalues.push(y);
 
         g.updateOptions({ 'file': data });
 
@@ -93,24 +99,22 @@
         // data is a list with [x,y] sub-lists (x is time, y is z-acc value)
         // to print something for debuggging: use console.log()
         // for numjs functions: use nj.array();
-        var time = Array(data.length);
+        var time = Array(yvalues.length);
 
-        var t = 0;
+        var t0 = 0;
 
-        var acc = nj.array(data).slice(null, 1);
+        var mean = yvalues.mean();
 
-        var mean = acc.mean();
-
-        var norm = Array(data.length);
+        var norm = Array(yvalues.length);
 
         var zeroTime = 0;
 
         var allTimes = [];
 
         for (var i = 0; i < acc.length; i++) {
-          norm[i] = acc[i] - mean;
-          time[i] = t
-          t = t + (1 / 104);
+          norm[i] = yvalues[i] - mean;
+          time[i] = t0
+          t0 = t0 + (1 / 104);
           if (i > 0 && norm[i] < 0 && norm[i - 1] > 0) {
             var diff = time.get(i) - zeroTime;
             allTimes.push(diff);
@@ -121,7 +125,7 @@
         var numbreaths = nj.array(allTimes).mean();
         var rate = 1 / numbreaths;
 
-        console.log(y);
+        console.log(rate);
           
       }
 
