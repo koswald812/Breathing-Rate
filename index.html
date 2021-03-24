@@ -107,7 +107,7 @@
         var yfilter = [];
 
         
-        var lowcutoff = Math.floor(yvalues.length*0.15);
+        var lowcutoff = Math.floor(yvalues.length*0.10);
         var highcutoff = Math.floor(yvalues.length*0.95);
         var windowSize = 20;
         // creating the filter. 
@@ -182,7 +182,7 @@
           console.log("rate" + rate);
 
           var rateText = document.getElementById("rate_text");
-          rateText.innerText = "Breathing Rate (per second): " + rate;
+          rateText.innerText = "Breathing Rate (per second): " + Math.round(100*rate) / 100;
 
           // push all data to the kevinData array.
           kevinData = [];
