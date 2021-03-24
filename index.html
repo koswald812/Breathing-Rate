@@ -163,11 +163,13 @@
 
         // PLOT POINTS ----
         data.push([x, y]);
-        // push all data to the kevinData array.
-        for (var i = 0; i < time.length; i++) {
-          kevinData.push([time[i], norm[i]]);
-        }
+        
         if ((kevinData.length&15)==15) {
+          // push all data to the kevinData array.
+          kevinData.splice(0, kevinData.length);
+          for (var i = 0; i < time.length; i++) {
+            kevinData.push([time[i], norm[i]]);
+          }
           g.updateOptions( { 'file': kevinData } );
         }
         // ------------------
