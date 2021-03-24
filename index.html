@@ -104,7 +104,7 @@
 
         var yfilter = [];
 
-        console.log("number of yvalues" + yvalues.length);
+        
         var lowcutoff = Math.floor(yvalues.length*0.15);
         var highcutoff = Math.floor(yvalues.length*0.95);
         var windowSize = 20;
@@ -152,7 +152,7 @@
           if (norm[i] < 0 && norm[i - 1] > 0) {
 
             var breathLength = time[i] - lastBreath;
-            
+
             if (breathLength > 1) {
               crossTimes.push(time[i]);
               periods.push(breathLength);
@@ -162,17 +162,23 @@
           }
         }
 
-        console.log("number of breaths: " + periods.length);
-        console.log("Breath times " + crossTimes.toString());
+        
+
         var avgPeriod = nj.array(periods).mean();
         var rate = 1 / avgPeriod;
 
-        console.log("rate" + rate);
+        
 
         // PLOT POINTS ----
         data.push([x, y]);
         
-        if ((yfilter.length%15) === 0) {
+        if ((yfilter.length%30) === 0) {
+          // log info
+          console.log("number of yvalues" + yvalues.length);
+          console.log("number of breaths: " + periods.length);
+          console.log("Breath times " + crossTimes.toString());
+          console.log("rate" + rate);
+
           // push all data to the kevinData array.
           kevinData = [];
           for (var i = 0; i < time.length; i++) {
