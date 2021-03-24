@@ -131,7 +131,8 @@
         for (var i = 0; i < yfilter.length; i++) {
           norm[i] = yfilter[i] - mean;
           time[i] = t0
-          t0 = t0 + (1 / 104);
+          // 20 seconds of samples / number of samples gotten
+          t0 = t0 + (20/yvalues.length);
         }
 
         // store each breath period
