@@ -99,47 +99,66 @@
         // data is a list with [x,y] sub-lists (x is time, y is z-acc value)
         // to print something for debuggging: use console.log()
         // for numjs functions: use nj.array();
-        var t0 = 0;
-
-        var zeroTime = 0;
-
-        var allTimes = [];
-
-        var sum = 0;
 
         var yfilter = [];
 
-        for (var i = 401; i < yvalues.length - 50; i++) {
-          sum = sum + yvalues[i];
-          if (i%25 === 0) {
-            yfilter.push(sum / 25);
-            sum = 0;
+        console.log("number of yvalues" + yvalues.length);
+        var lowcutoff = Math.floor(yvalues.length*0.15);
+        var highcutoff = Math.floor(yvalues.length*0.95);
+        var windowSize = 10;
+        // creating the filter. 
+        for (var start = lowcutoff; start < highcutoff - windowSize; start++) {
+          var sum = 0;
+          for (var i = start; i < start + windowSize; i++) {
+            sum += yvalues[i];
           }
+          yfilter.push(sum / windowSize);
         }
 
+        // mean of filtered values for normalization
         var mean = nj.array(yfilter).mean();
 
+        // to store new values after subtracting mean
         var norm = Array(yfilter.length);
 
+        // array to store the times
         var time = Array(yfilter.length);
 
+        // time ticker variable
+        var t0 = 0;
+
+        // loop through each filtered point to create the norm and time vectors
         for (var i = 0; i < yfilter.length; i++) {
           norm[i] = yfilter[i] - mean;
           time[i] = t0
           t0 = t0 + (1 / 104);
-          if (i > 0 && norm[i] < 0 && norm[i - 1] > 0) {
-            var diff = time[i] - zeroTime;
-            if (diff > 2) {
-            allTimes.push(diff);
-            zeroTime = time[i];
+        }
+
+        // store each breath period
+        var periods = [];
+
+        // last time graph crossed from pos to neg
+        var lastBreath = 0;
+
+        // loop through each normalized data point..
+        for (var i = 1; i < norm.length; i++) {
+          // whenever the graph crosses from pos to neg
+          if (norm[i] < 0 && norm[i - 1] > 0) {
+            
+            var breathLength = time[i] - lastBreath;
+            if (breathLength > 0) {
+              periods.push(breathLength);
+              
+              lastBreath = time[i];
             }
           }
         }
 
-        var numbreaths = nj.array(allTimes).mean();
-        var rate = 1 / numbreaths;
+        console.log("number of breaths: " + periods.length);
+        var avgPeriod = nj.array(periods).mean();
+        var rate = 1 / avgPeriod;
 
-        console.log(rate);
+        console.log("rate" + rate);
           
       }
 
