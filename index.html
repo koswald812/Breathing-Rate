@@ -105,7 +105,7 @@
         console.log("number of yvalues" + yvalues.length);
         var lowcutoff = Math.floor(yvalues.length*0.15);
         var highcutoff = Math.floor(yvalues.length*0.95);
-        var windowSize = 10;
+        var windowSize = 20;
         // creating the filter. 
         for (var start = lowcutoff; start < highcutoff - windowSize; start++) {
           var sum = 0;
@@ -147,7 +147,7 @@
           if (norm[i] < 0 && norm[i - 1] > 0) {
             
             var breathLength = time[i] - lastBreath;
-            if (breathLength > 0) {
+            if (breathLength > 1) {
               periods.push(breathLength);
               
               lastBreath = time[i];
