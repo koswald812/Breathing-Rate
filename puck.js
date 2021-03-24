@@ -13,6 +13,6 @@ setWatch(function() {
     setTimeout(function() {
       Puck.accelOff();
       LED1.write(false);
-    }, 10000);
+    }, 20000);
    
   }, BTN, {edge: "rising", debounce:50, repeat:true});
