@@ -111,8 +111,8 @@
 
         for (var i = 401; i < yvalues.length - 50; i++) {
           sum = sum + yvalues[i];
-          if (i > 0 && i%10 === 0) {
-            yfilter.push(sum / 10);
+          if (i > 0 && i%25 === 0) {
+            yfilter.push(sum / 25);
             sum = 0;
           }
         }
