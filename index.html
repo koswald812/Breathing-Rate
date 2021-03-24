@@ -219,7 +219,7 @@
 
           // Setup data collection and graphing
 
-          data.splice(0, data.length);
+          kevinData.splice(0, kevinData.length);
 
           // connection.write("Bluetooth.println(ecg().toFixed(3));} ,20); \n", function () { });
           // connection.write(" \n", function () { });
@@ -232,7 +232,8 @@
 
           var date_win_max = date_win_min + 2 * taxis_increment;
 
-          g.updateOptions({ dateWindow: [date_win_min, date_win_max] });
+          // g.updateOptions({ dateWindow: [date_win_min, date_win_max] });
+          g.updateOptions({ dateWindow: [0, 21] });
 
         }); // End Puck.connect ()
 
