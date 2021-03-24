@@ -8,7 +8,7 @@
     <button type="button" id="myPuck_connect"> Connect Puck via Bluetooth
     </button>
 
-    <h2>Test</h2>
+    <h2 id="rate_text">Breathing Rate (per second): </h2>
 
     <script src="https://www.puck-js.com/puck.js"></script>
 
@@ -180,6 +180,9 @@
           console.log("number of breaths: " + periods.length);
           console.log("Breath times " + crossTimes.toString());
           console.log("rate" + rate);
+
+          var rateText = document.getElementById("rate_text");
+          rateText.innerText = "Breathing Rate (per second): " + rate;
 
           // push all data to the kevinData array.
           kevinData = [];
