@@ -109,7 +109,7 @@
         
         var lowcutoff = Math.floor(yvalues.length*0.15);
         var highcutoff = Math.floor(yvalues.length*0.95);
-        var windowSize = 20;
+        var windowSize = 30;
         // creating the filter. 
         for (var start = lowcutoff; start < highcutoff - windowSize; start++) {
           var sum = 0;
