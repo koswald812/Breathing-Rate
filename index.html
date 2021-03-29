@@ -98,7 +98,7 @@
             
             // eliminate times that are too short (less than a second) 
             // to eliminate any noise where the plot crosses 0 at incorrect times.
-            if (breathLength > 1) {
+            if (breathLength > .5) {
               crossTimes.push(time[i]); 
               periods.push(breathLength);
               lastBreath = time[i];
