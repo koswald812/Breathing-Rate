@@ -96,7 +96,7 @@
           if (norm[i] < 0 && norm[i - 1] > 0) {
             var breathLength = time[i] - lastBreath; // store time between last crossing point and now
             
-            // eliminate times that are too short (less than a second) 
+            // eliminate times that are too short (less than half a second) 
             // to eliminate any noise where the plot crosses 0 at incorrect times.
             if (breathLength > .5) {
               crossTimes.push(time[i]); 
