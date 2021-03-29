@@ -131,8 +131,21 @@
         // time ticker variable
         var t0 = 0;
 
-        // loop through each filtered point to create the norm and time vectors
+        // loop through to create regional means for normalization
+        
+
+        // loop through each filtered point to create the norm (subtract regional means) and time vectors
         for (var i = 0; i < yfilter.length; i++) {
+          var meanRange = Math.ceil(.1 * yfilter.length);
+          var bottom = i - meanRange;
+          var top = i + meanRange;
+          if (bottom < 0) {
+            bottom = 0;
+          }
+          if (top > yfilter.length - 1) {
+            top = yfilter.length - 1;
+          }
+          mean = nj.array(yfilter.slice(bottom, top)).mean();
           norm[i] = yfilter[i] - mean;
           time[i] = t0
           // 20 seconds of samples / number of samples gotten
@@ -164,12 +177,8 @@
           }
         }
 
-        
-
         var avgPeriod = nj.array(periods).mean();
-        var rate = 1 / avgPeriod;
-
-        
+        var rate = 1 / avgPeriod;  
 
         // PLOT POINTS ----
         data.push([x, y]);
