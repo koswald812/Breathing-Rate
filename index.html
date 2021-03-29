@@ -1,21 +1,12 @@
-<!--TODO Javascript dygraph stacked graph-->
-
 <html>
 
   <head>
-
-
     <button type="button" id="myPuck_connect"> Connect Puck via Bluetooth
     </button>
-
     <h2 id="rate_text">Breathing Rate (per second): </h2>
-
     <script src="https://www.puck-js.com/puck.js"></script>
-
     <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
-
     <script type="text/javascript"
       src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js"></script>
     <link rel="stylesheet"
@@ -23,93 +14,38 @@
   </head>
 
   <body>
-
     <div id="div_g" style="width:1200px; height:600px;"></div>
-
     <script type="text/javascript">
-
     $(document).ready(function () {
-
-      var data = [];
-
-      var kevinData = [];
-
+      var Data = [];
       var tvalues = [];
-
       var yvalues = [];
-
       var start_time;
-
       var connection;
-
       var xconnect = document.getElementById("myPuck_connect")
-
       var taxis_increment = 10 * 1000; /// axis increment in milliseconds
-
-      var t = new Date();
-
-      data.push([t, 1000.000]);
-
-      kevinData.push([0, 1000.000]);
-
-      var date_win_min = t.getTime();
-
-      var date_win_max = date_win_min + 2 * taxis_increment;
-
-      var g = new Dygraph(document.getElementById("div_g"), kevinData, 
-
+      Data.push([0, 1000.000]);
+      var g = new Dygraph(document.getElementById("div_g"), Data, 
         {
-
           drawPoints: true,
-
           showRoller: true,
-
           digitsAfterDecimal: 3,
-
-          dateWindow: [date_win_min, date_win_max],
-
-          // valueRange: [980, 1020],
-
+          dateWindow: [0, 21],
           labels: ['Time', 'z-acceleration'],
-
           showRangeSelector: true
-
         });
 
-
       function onLine(v) {
-
         v = JSON.parse(v);
-
-        var x = new Date(); // current time
-
         var y = parseFloat(v['acc']['z']);
-
-        if (x.getTime() >= date_win_max) {
-
-          date_win_min += taxis_increment;
-
-          date_win_max += taxis_increment;
-
-          // g.updateOptions({ dateWindow: [date_win_min, date_win_max] });
-
-        };
-
         
-
         // code to calculate rate. 
-        // data is a list with [x,y] sub-lists (x is time, y is z-acc value)
-        // to print something for debuggging: use console.log()
-        // for numjs functions: use nj.array();
-
         yvalues.push(y);
-
         var yfilter = [];
-
-        
         var lowcutoff = Math.floor(yvalues.length*0.15);
         var highcutoff = Math.floor(yvalues.length*0.95);
         var windowSize = 30;
+        
         // creating the filter. 
         for (var start = lowcutoff; start < highcutoff - windowSize; start++) {
           var sum = 0;
@@ -130,9 +66,6 @@
 
         // time ticker variable
         var t0 = 0;
-
-        // loop through to create regional means for normalization
-        
 
         // loop through each filtered point to create the norm (subtract regional means) and time vectors
         for (var i = 0; i < yfilter.length; i++) {
@@ -161,17 +94,14 @@
         // last time graph crossed from pos to neg
         var lastBreath = 0;
 
-        // loop through each normalized data point..
+        // loop through each normalized data point
         for (var i = 1; i < norm.length; i++) {
           // whenever the graph crosses from pos to neg
           if (norm[i] < 0 && norm[i - 1] > 0) {
-
             var breathLength = time[i] - lastBreath;
-
             if (breathLength > 1) {
               crossTimes.push(time[i]);
               periods.push(breathLength);
-              
               lastBreath = time[i];
             }
           }
@@ -180,9 +110,6 @@
         var avgPeriod = nj.array(periods).mean();
         var rate = 1 / avgPeriod;  
 
-        // PLOT POINTS ----
-        data.push([x, y]);
-        
         if ((yfilter.length%30) === 0) {
           // log info
           console.log("number of yvalues" + yvalues.length);
@@ -193,87 +120,45 @@
           var rateText = document.getElementById("rate_text");
           rateText.innerText = "Breathing Rate (per second): " + Math.round(100*rate) / 100;
 
-          // push all data to the kevinData array.
-          kevinData = [];
+          // push all data to the Data array.
+          Data = [];
           for (var i = 0; i < time.length; i++) {
-            kevinData.push([time[i], norm[i]]);
+            Data.push([time[i], norm[i]]);
           }
-          g.updateOptions( { 'file': kevinData } );
+          g.updateOptions( { 'file': Data } );
         }
-        // ------------------
-          
       }
 
-
       function bluetooth_connect() {
-
         Puck.connect(function (c) {
-
+          
           // alert("In Puck connect");
-
           if (!c) {
-
             alert("Couldn't connect!");
-
             return;
-
           }
-
           connection = c;
-
-          // Handle the data we get back, and call 'onLine'
-
-          // whenever we get a line
-
+          
+          // Handle the data we get back, and call 'onLine' whenever we get a line
           var buf = "";
-
           connection.on("data", function (d) {
-
             buf += d;
-
             var i = buf.indexOf("\n");
-
             while (i >= 0) {
-
               onLine(buf.substr(0, i));
-
               buf = buf.substr(i + 1);
-
               i = buf.indexOf("\n");
-
             }
-
-          }); // connection.on ()
-
+          });
           xconnect.textContent = "Disconnect Puck via Bluetooth";
 
           // Setup data collection and graphing
-
-          kevinData.splice(0, kevinData.length);
-
-          // connection.write("Bluetooth.println(ecg().toFixed(3));} ,20); \n", function () { });
-          // connection.write(" \n", function () { });
-
-          t = new Date();
-
-          start_time = t;
-
-          var date_win_min = t.getTime();
-
-          var date_win_max = date_win_min + 2 * taxis_increment;
-
-          // g.updateOptions({ dateWindow: [date_win_min, date_win_max] });
+          Data.splice(0, Data.length);
           g.updateOptions({ dateWindow: [0, 21] });
-
-        }); // End Puck.connect ()
-
+        });
       }
-
       xconnect.addEventListener("click", function () { bluetooth_connect() });
-
     });
-
-
 
   </script>
   </body>
