@@ -9,7 +9,7 @@ setWatch(function() {
     Puck.accelOn(104);
     LED1.write(true);
    
-    // in 10 seconds, stop reading data, turn off the LED.
+    // in 20 seconds, stop reading data, turn off the LED.
     setTimeout(function() {
       Puck.accelOff();
       LED1.write(false);
