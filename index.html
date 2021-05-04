@@ -38,7 +38,11 @@
         v = JSON.parse(v);
 
         // z direction is from flat face - take only data from linear acceleration in z direction
-        var y = parseFloat(v['acc']['z']);
+        var y = parseFloat(v['V0']);
+        var c = parseFloat(v['led']);
+        console.log(v);
+        console.log(y);
+        console.log(c);
         yvalues.push(y); // add newest z acceleration of yvalues vector
         
         // creating the moving avg filter
